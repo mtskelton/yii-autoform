@@ -1,4 +1,4 @@
-#yii-autoform (v0.1)
+#yii-autoform (v0.1.1)
 
 Autoform is a convenience class used to quickly render forms in a Yii view.  It's compatible with YiiStrap (www.getyiistrap.com) and will render fields using TbActiveForm if it's available.
 
@@ -37,9 +37,16 @@ The most basic example of using AutoForm is to call the following code in your v
 	$af->render();
 ?>```
 
-This will render every available field on your form using the default options.  You can pass options to the AutoForm class as the second parameter in the form of an associative array.  e.g.
+You can set the action URL for the form using the second parameter (if it's null, it'll just post to itself)
 
-```$af = AutoForm($model, array(
+```<?php
+	$af = AutoForm($model, $this->createUrl('/form/'));
+	$af->render();
+?>```
+
+This will render every available field on your form using the default options.  You can pass options to the AutoForm class as the third parameter in the form of an associative array.  e.g.
+
+```$af = AutoForm($model, null, array(
 		'title' => 'Form Title'
 	));```
 

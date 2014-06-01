@@ -7,13 +7,15 @@
  */
 class AutoForm {
 	private $_model;
+	private $_action;
 	private $_opts = array();
 	private $_fields = null;
 	private $_override = null;
 
-	public function __construct($model, $opts = null)
+	public function __construct($model, $action = null, $opts = null)
 	{
 		$this->_model = $model;
+		$this->_action = $action;
 		$this->_opts['useTB'] = class_exists('TbActiveForm');
 
 		// Get override defs if they exist
@@ -138,5 +140,11 @@ class AutoForm {
 				return "activeTextField";
 			}
 		}
+	}
+
+	public function getAction() {
+		if($this->_action)
+			return $this->_action;
+		return "";
 	}
 }

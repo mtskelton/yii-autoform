@@ -1,10 +1,12 @@
 <?php
 	if ($autoform->hasTB()) {
 		$form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-			'layout' => TbHtml::FORM_LAYOUT_HORIZONTAL
+			'layout' => TbHtml::FORM_LAYOUT_HORIZONTAL,
+			'action' => $autoform->getAction()
 		));
 	} else {
 		$form = $this->beginWidget('CActiveForm', array(
+			'action' => $autoform->getAction()
 		));
 	}
 ?>
