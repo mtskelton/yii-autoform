@@ -11,7 +11,7 @@ Clone or download the extension into a directory called autoform in your project
 
 Then open protected/config/main.php and modify it as follows:
 
-```<?php
+'''<?php
 // main configuration
 return array(
 	...
@@ -25,30 +25,30 @@ return array(
         ...
         'autoform.components.*',
     ),
-);```
+);'''
 
 
 ##Usage
 
 The most basic example of using AutoForm is to call the following code in your view where you want to render the form, where $model is your CActiveRecord, CModel or CActiveForm class:
 
-```<?php
-	$af = AutoForm($model);
+'''<?php
+	$af = new AutoForm($model);
 	$af->render();
-?>```
+?>'''
 
 You can set the action URL for the form using the second parameter (if it's null, it'll just post to itself)
 
-```<?php
-	$af = AutoForm($model, $this->createUrl('/form/'));
+'''<?php
+	$af = new AutoForm($model, $this->createUrl('/form/'));
 	$af->render();
-?>```
+?>'''
 
 This will render every available field on your form using the default options.  You can pass options to the AutoForm class as the third parameter in the form of an associative array.  e.g.
 
-```$af = AutoForm($model, null, array(
+'''$af = AutoForm($model, null, array(
 		'title' => 'Form Title'
-	));```
+	));'''
 
 
 ##Field Types
@@ -57,13 +57,13 @@ By default, AutoForm will attempt to display the fields in your form using the d
 
 To specify AutoForm specific field settings, just add a function to your model class called autoform() and get it to return an associative array .. e.g.
 
-```public function autoform()
+'''public function autoform()
 {
     return array(
             'username' => array('label'=>'Username', 'widget'=>'activeTextField'),
             'dropdown' => array('label'=>'Choices', 'widget'=>'activeDropDownList','data'=>array('1', '2', '3'))
         );
-}```
+}'''
 
 Note - if you're not using YiiStrap, the widget name calls CHtml.  If you are using YiiStrap, you need to use the corresponding form component name (e.g. textFieldControlGroup)
 
