@@ -103,11 +103,11 @@ class AutoForm {
 		if(isset($field['data'])) {
 			if($this->hasTB())
 				return call_user_func(array($form, $func), $this->_model, $field['id'], $field['data']);
-			return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id'], $field['data']) . '</div>';
+			return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id'], $field['data']) . $form->error($this->_model, $field['id']) . '</div>';
 		}
 		if($this->hasTB())
 			return call_user_func(array($form, $func), $this->_model, $field['id']);
-		return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id']) . '</div>';
+		return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id']) . CHtml::error($this->_model, $field['id']) . '</div>';
 	}
 
 	private function _determineFieldFunc($field) {
