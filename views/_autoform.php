@@ -23,6 +23,12 @@
 </fieldset>
 
 <?php
+	if($autoform->hasAdditional())
+		include $autoform->getAdditional(); 
+?>
+
+
+<?php
 	if($autoform->hasTB()) {
 		echo TbHtml::formActions(array(
 			TbHtml::submitButton('Submit', array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),

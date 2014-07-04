@@ -101,12 +101,16 @@ class AutoForm {
 		$func = $this->_determineFieldFunc($field);
 
 		if(isset($field['data'])) {
-			if($this->hasTB())
+			if($this->hasTB() && !preg_match("/^active/", $func))
 				return call_user_func(array($form, $func), $this->_model, $field['id'], $field['data']);
+			if($func == "activeHiddenField")
+				return call_user_func("CHtml::" . $func, $this->_model, $field['id'], $field['data']);
 			return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id'], $field['data']) . $form->error($this->_model, $field['id']) . '</div>';
 		}
-		if($this->hasTB())
+		if($this->hasTB() && !preg_match("/^active/", $func))
 			return call_user_func(array($form, $func), $this->_model, $field['id']);
+		if($func == "activeHiddenField")
+			return call_user_func("CHtml::" . $func, $this->_model, $field['id']);
 		return '<div class="row">' . CHtml::activeLabel($this->_model, $field['id']) . call_user_func("CHtml::" . $func, $this->_model, $field['id']) . CHtml::error($this->_model, $field['id']) . '</div>';
 	}
 
@@ -146,5 +150,12 @@ class AutoForm {
 		if($this->_action)
 			return $this->_action;
 		return "";
+	}
+	
+	public function hasAdditional() {
+		return isset($this->_opts['additional']);
+	}
+	public function getAdditional() {
+		return $this->_opts['additional'];
 	}
 }
