@@ -11,32 +11,57 @@
 	}
 ?>
 
-<fieldset>
-	<legend><?php echo $autoform->getTitle(); ?></legend>
-
 <?php
-	foreach($autoform->getFields() as $field) {
-		echo $autoform->renderField($form, $field);
+	if($autoform->hasFieldSets()) {
+		foreach($autoform->getFieldSets() as $fsId => $fs) {
+?>
+			<fieldset class="<?php if(array_key_exists('class', $fs)) { echo $fs['class']; } ?>">
+				<?php if ($autoform->hasTitle($fsId)) { ?>
+					<legend><?php echo $autoform->getTitle($fsId); ?></legend>
+				<?php } ?>
+
+			<?php
+				foreach($autoform->getFields($fsId) as $field) {
+					echo $autoform->renderField($form, $field);
+				}
+			?>
+			</fieldset>
+<?php
+		}
+	} else {
+?>
+		<fieldset>
+			<?php if ($autoform->hasTitle()) { ?>
+				<legend><?php echo $autoform->getTitle(); ?></legend>
+			<?php } ?>
+
+		<?php
+			foreach($autoform->getFields() as $field) {
+				echo $autoform->renderField($form, $field);
+			}
+		?>
+
+		</fieldset>
+<?php
 	}
 ?>
 
-</fieldset>
-
 <?php
 	if($autoform->hasAdditional())
-		include $autoform->getAdditional(); 
+		include $autoform->getAdditional();
 ?>
 
 
 <?php
 	if($autoform->hasTB()) {
-		echo TbHtml::formActions(array(
-			TbHtml::submitButton('Submit', array('color' => TbHtml::BUTTON_COLOR_PRIMARY)),
-			TbHtml::resetButton('Reset'),
-		));
+		$btns = array(TbHtml::submitButton($autoform->getSubmitText(), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)));
+		if($autoform->hasResetText())
+			$btns[] = TbHtml::resetButton($autoform->getResetText());
+		echo TbHtml::formActions($btns);
 	} else {
-		echo CHtml::submitButton('Login');
-		echo CHtml::resetButton('Reset');
+		echo CHtml::submitButton($autoform->getSubmitText());
+		if($autoform->hasResetText())
+			echo CHtml::resetButton($autoform->getResetText);
 	}
 ?>
 

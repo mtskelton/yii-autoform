@@ -11,16 +11,25 @@ class AutoForm {
 	private $_opts = array();
 	private $_fields = null;
 	private $_override = null;
+	private $_fieldsets = null;
 
 	public function __construct($model, $action = null, $opts = null)
 	{
 		$this->_model = $model;
 		$this->_action = $action;
 		$this->_opts['useTB'] = class_exists('TbActiveForm');
+		$this->_opts['submitText'] = 'Submit';
+		$this->_opts['resetText'] = 'Reset';
 
 		// Get override defs if they exist
-		if(method_exists($model, 'autoform'))
+		if (method_exists($model, 'autoform'))
 			$this->_override = $model->autoform();
+		elseif (method_exists($model, 'autoformFields'))
+			$this->_override = $model->autoformFields();
+
+		// Fieldsets
+		if (method_exists($model, 'autoformFieldsets'))
+			$this->_fieldsets = $model->autoformFieldsets();
 
 		if($opts) {
 			$this->_opts = array_merge($this->_opts, $opts);
@@ -35,8 +44,13 @@ class AutoForm {
 		));
 	}
 
-	public function getTitle()
+	public function getTitle($id = null)
 	{
+		if ($id)
+			if ($this->hasTitle($id))
+				return $this->_fieldsets[$id]['legend'];
+			else
+				return "";
 		if (isset($this->_opts['title'])) {
 			return $this->_opts['title'];
 		} else if (isset($this->_model->autoformTitle)) {
@@ -45,11 +59,29 @@ class AutoForm {
 		return "";
 	}
 
-	public function hasTB() {
+	public function hasTitle($id = null) {
+		if ($id)
+			return $this->_fieldsets != null && isset($this->_fieldsets[$id]) && isset($this->_fieldsets[$id]['legend']) && strlen($this->_fieldsets[$id]['legend']) > 0;
+		return strlen($this->getTitle() > 0);
+	}
+
+	public function hasTB()
+	{
 		return $this->_opts['useTB'];
 	}
 
-	public function getFields() {
+	public function hasFieldSets()
+	{
+		return $this->_fieldsets != null;
+	}
+
+	public function getFieldSets()
+	{
+		return $this->_fieldsets;
+	}
+
+	public function getFields($id = null)
+	{
 		if($this->_fields == null) {
 			$this->_fields = array();
 			foreach($this->_model->rules() as $rule) {
@@ -63,6 +95,16 @@ class AutoForm {
 				}
 			}
 		}
+		if($id) {
+			$fields = array();
+			$fieldNames = explode(",", $this->_fieldsets[$id]['fields']);
+			foreach($fieldNames as $fieldName) {
+				$fieldName = trim($fieldName);
+				if(array_key_exists($fieldName, $this->_fields))
+					$fields[] = $this->_fields[$fieldName];
+			}
+			return $fields;
+		}
 		return $this->_fields;
 	}
 
@@ -72,7 +114,6 @@ class AutoForm {
 				'type' => $this->_parseType($type),
 				'id' => $fieldName
 			), $this->_getFieldOverride($fieldName));
-
 		} else {
 			$type = $this->_parseType($type);
 			if($type != 'string')
@@ -136,6 +177,8 @@ class AutoForm {
 			} else {
 				return "activeFileField";
 			}
+		} else if($field['type'] == 'hidden') {
+			return "hiddenField";
 		} else {
 			// string
 			if($this->hasTB()) {
@@ -151,7 +194,16 @@ class AutoForm {
 			return $this->_action;
 		return "";
 	}
-	
+
+	public function getSubmitText() {
+		return $this->_opts['submitText'];
+	}
+	public function getResetText() {
+		return $this->_opts['resetText'];
+	}
+	public function hasResetText() {
+		return strlen($this->_opts['resetText']) > 0;
+	}
 	public function hasAdditional() {
 		return isset($this->_opts['additional']);
 	}

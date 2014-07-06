@@ -63,20 +63,41 @@ $af = AutoForm($model, null, array(
 
 By default, AutoForm will attempt to display the fields in your form using the default component for the rules you specify, but you can override this.
 
-To specify AutoForm specific field settings, just add a function to your model class called autoform() and get it to return an associative array .. e.g.
+To specify AutoForm specific field settings, just add a function to your model class called autoformFields() and get it to return an associative array .. e.g.
 
-```
-public function autoform()
+```public function autoformFields()
 {
     return array(
-            'username' => array('label'=>'Username', 'widget'=>'activeTextField'),
-            'dropdown' => array('label'=>'Choices', 'widget'=>'activeDropDownList','data'=>array('1', '2', '3'))
+            'username' => array('widget'=>'activeTextField'),
+            'dropdown' => array('widget'=>'activeDropDownList','data'=>array('1', '2', '3'))
         );
-}
-```
+}```
 
 Note - if you're not using YiiStrap, the widget name calls CHtml.  If you are using YiiStrap, you need to use the corresponding form component name (e.g. textFieldControlGroup)
 
+
+##Fieldsets
+
+Autoform now supports fieldsets and grouping.  By default all of your fields will be clumped together in the same ```fieldset``` container, and displayed in the order they are parsed from your form / model.
+
+You can change this by grouping them into fieldsets.  Just add a function called ```autoformFieldsets()``` to your model / form class like so:
+
+```
+public function autoformFieldsets() {
+  return array(
+	  'fieldset1' => array(
+		  'legend' => 'First Fieldset',
+		  'fields' => 'field1, field2, field3, field4'
+	      ),
+	  'fieldset2' => array(
+		  'legend' => 'Second Fieldset',
+		  'fields' => 'field5, field6, field7, field8'
+	      )
+      );
+}
+```
+
+Note - if you use fieldsets, the form title attribute is ignored.
 
 ##Runtime Options
 
@@ -85,7 +106,15 @@ Note - if you're not using YiiStrap, the widget name calls CHtml.  If you are us
 You can set the display title of the form in two ways:
  - By setting the "title" option when constructing the AutoForm instance.
  - By adding a public $autoformTitle field to the model you pass.
+ 
+Note that this is ignored if fieldsets are used!
+
 
 **useTB**
 
 This option if set to false will disable the use of TbActiveForm to render the form.  Otherwise if you have Yiistrap installed, AutoForm will attempt to autodetect and use it.
+
+
+**submitText**
+
+The text to show on the submit button... defaults to Submit
