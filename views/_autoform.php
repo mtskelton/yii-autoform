@@ -2,11 +2,13 @@
 	if ($autoform->hasTB()) {
 		$form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
 			'layout' => TbHtml::FORM_LAYOUT_HORIZONTAL,
-			'action' => $autoform->getAction()
+			'action' => $autoform->getAction(),
+			'htmlOptions'=>array('enctype'=>'multipart/form-data')
 		));
 	} else {
 		$form = $this->beginWidget('CActiveForm', array(
-			'action' => $autoform->getAction()
+			'action' => $autoform->getAction(),
+			'htmlOptions'=>array('enctype'=>'multipart/form-data')
 		));
 	}
 ?>
