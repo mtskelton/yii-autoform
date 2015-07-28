@@ -8,6 +8,7 @@
 class AutoForm {
 	private $_model;
 	private $_action;
+	private $_form = null;
 	private $_opts = array();
 	private $_fields = null;
 	private $_override = null;
@@ -200,6 +201,9 @@ class AutoForm {
 	}
 	public function getResetText() {
 		return $this->_opts['resetText'];
+	}
+	public function hasSubmitText() {
+		return strlen($this->_opts['submitText']) > 0;
 	}
 	public function hasResetText() {
 		return strlen($this->_opts['resetText']) > 0;

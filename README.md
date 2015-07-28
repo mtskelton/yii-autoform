@@ -65,13 +65,15 @@ By default, AutoForm will attempt to display the fields in your form using the d
 
 To specify AutoForm specific field settings, just add a function to your model class called autoformFields() and get it to return an associative array .. e.g.
 
-```public function autoformFields()
+```
+public function autoformFields()
 {
     return array(
             'username' => array('widget'=>'activeTextField'),
             'dropdown' => array('widget'=>'activeDropDownList','data'=>array('1', '2', '3'))
         );
-}```
+}
+```
 
 Note - if you're not using YiiStrap, the widget name calls CHtml.  If you are using YiiStrap, you need to use the corresponding form component name (e.g. textFieldControlGroup)
 
