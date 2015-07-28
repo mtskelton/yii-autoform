@@ -82,15 +82,30 @@ class AutoForm {
 
 	public function getFields($id = null)
 	{
+		$unsafeFields = array();
 		if($this->_fields == null) {
 			$this->_fields = array();
 			foreach($this->_model->rules() as $rule) {
 				if(sizeof($rule) > 1) {
 					$fieldNames = explode(",", $rule[0]);
 					$type = $rule[1];
-					foreach($fieldNames as $fieldName) {
-						$fieldName = trim($fieldName);
-						$this->_fields = $this->_parseField($this->_fields, $fieldName, $type);
+
+					if ($type != 'unsafe') {
+						foreach($fieldNames as $fieldName) {
+							$fieldName = trim($fieldName);
+
+							if( !in_array($fieldName, $unsafeFields))
+								$this->_fields = $this->_parseField($this->_fields, $fieldName, $type);
+						}
+					}
+					else {
+						foreach($fieldNames as $fieldName) {
+							$fieldName = trim($fieldName);
+							$unsafeFields[] = $fieldName;
+							
+							if ( array_key_exists($fieldName, $this->_fields) )
+								unset($this->_fields[$fieldName]);
+						}
 					}
 				}
 			}
