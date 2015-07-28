@@ -56,12 +56,16 @@
 
 <?php
 	if($autoform->hasTB()) {
-		$btns = array(TbHtml::submitButton($autoform->getSubmitText(), array('color' => TbHtml::BUTTON_COLOR_PRIMARY)));
+		$btns = array();
+		if($autoform->hasSubmitText())
+			$btns[] = TbHtml::submitButton($autoform->getSubmitText(), array('color' => TbHtml::BUTTON_COLOR_PRIMARY));
 		if($autoform->hasResetText())
 			$btns[] = TbHtml::resetButton($autoform->getResetText());
-		echo TbHtml::formActions($btns);
+		if(sizeof($btns) > 0)
+			echo TbHtml::formActions($btns);
 	} else {
-		echo CHtml::submitButton($autoform->getSubmitText());
+		if($autoform->hasSubmitText())
+			echo CHtml::submitButton($autoform->getSubmitText());
 		if($autoform->hasResetText())
 			echo CHtml::resetButton($autoform->getResetText);
 	}
